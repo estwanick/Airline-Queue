@@ -1,7 +1,10 @@
-public class Queue<T> {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class Queue<T>  implements  Iterable<T>{
 
     private int total;
-    private Node first, last;
+    private Node<T> first, last;
 
     public Queue() {
         first = null;
@@ -13,6 +16,7 @@ public class Queue<T> {
         return first == null;
     }
 
+    //Should convert to priority queue
     public Queue<T> enqueue(T ele)
     {
         Node current = last;
@@ -34,4 +38,30 @@ public class Queue<T> {
         return node;
     }
 
+    @Override
+    public Iterator<T> iterator() {
+        return new QueueIterator<T>(first);
+    }
+
+    private class QueueIterator<T> implements Iterator<T> {
+        private Node<T> current;
+
+        public QueueIterator(Node <T> first) {
+            current = first;
+        }
+
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        public T next() {
+            if(!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            T item = current.getData();
+            current = current.getNext();
+            return item;
+        }
+
+    }
 }

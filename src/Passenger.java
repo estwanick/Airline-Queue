@@ -2,10 +2,12 @@ public class Passenger {
 
     private int passengerNumber;
     private String seatingClass;
+    private double arrivalTime;
 
-    public Passenger(int passengerNumber, String seatingClass) {
+    public Passenger(int passengerNumber, String seatingClass, double arrivalTime) {
         this.passengerNumber = passengerNumber;
         this.seatingClass = seatingClass;
+        this.arrivalTime = arrivalTime;
     }
 
     public int getPassengerNumber() {
