@@ -1,67 +1,103 @@
-public class PriorityQueue<Key> {
+import java.util.Arrays;
 
-    private Key[] queue;
-    private int numItems = 0;
+/*
+    Min heap implementation
+ */
 
-    public PriorityQueue(int initCapacity) {
-        queue = (Key[]) new Object[initCapacity + 1];
-        numItems = 0;
+public class PriorityQueue<T> {
+
+    private T[] heap;
+    private int size = 0;
+
+    public PriorityQueue(int capacity) {
+        heap = (T[]) new Object[capacity + 1];
+        size = 0;
     }
 
-    public boolean isEmpty() {
-        return numItems == 0;
-    }
+    public boolean isEmpty() { return size == 0; }
+    public int size() { return size; }
 
-    public int size() {
-        return numItems;
-    }
-
-    private void resize(int capacity) {
-        assert capacity > numItems;
-        Key[] temp = (Key[]) new Object[capacity];
-        for(int i = 1; i <= numItems; i++) {
-            temp[i] = queue[i];
-        }
-        queue = temp;
-    }
-
-    public void insert(Key key) {
-        if(numItems == queue.length - 1) {
-            resize(2 * queue.length);
-        }
-        queue[++numItems] = key;
-        heapUp(numItems);
-    }
-
-    private void heapUp(int key) {
-        while(key > 1 && lessThan(key/2, key)) {
-            swap(key, key/2);
-            key = key/2;
+    private void upHeap() {
+        int index = size - 1;
+        while(hasParent(index) && greaterThan(parent(index), heap[index])) {
+            swap(getParentIndex(index), index);
+            index = getParentIndex(index);
         }
     }
 
-    private void heapDown(int key) {
-        while(2*key <= numItems) {
-            int x = 2 * key;
-            if(x < numItems && lessThan(x, x+1)) {
-                x++;
+    private void downHeap() {
+        int index = 0;
+        while(hasLeftChild(index)) {
+            int smallerChildIndex = getLeftChildIndex(index);
+            if(hasRightChild(index) && lessThan(rightChild(index), leftChild(index))) {
+                smallerChildIndex = getRightChildIndex(index);
             }
-            if(!lessThan(key, x)) {
+
+            if(lessThan(heap[index], heap[smallerChildIndex])) {
                 break;
+            } else {
+                swap(index, smallerChildIndex);
             }
-            swap(key, x);
-            key = x;
+            index = smallerChildIndex;
         }
     }
 
-    private boolean lessThan(int x, int y) {
-        return ((Comparable<Key>) queue[x]).compareTo(queue[y]) < 0;
+    public void printHeap() {
+        for(T p: heap) {
+            System.out.println(fetchMin());
+        }
+    }
+
+    public void add(T item) {
+        ensureCapacity();
+        heap[size++] = item;
+        upHeap();
+    }
+
+    public T fetchMin() {
+        if(size == 0) throw new IllegalStateException();
+        T minItem = heap[0];
+        heap[0] = heap[size - 1];
+        size--;
+        downHeap();
+        return minItem;
+    }
+
+    public T peek() {
+        if(size == 0) throw new IllegalStateException();
+        return heap[0];
+    }
+
+    private boolean greaterThan(T x, T y) {
+        return ((Comparable<T>) x).compareTo(y) > 0;
+    }
+
+    private boolean lessThan(T x, T y) {
+        return ((Comparable<T>) x).compareTo(y) > 0;
     }
 
     private void swap(int x, int y) {
-        Key swap = queue[x];
-        queue[x] = queue[y];
-        queue[y] = swap;
+        T swap = heap[x];
+        heap[x] = heap[y];
+        heap[y] = swap;
     }
+
+    private void ensureCapacity() {
+        if(size == heap.length - 1) {
+            heap = Arrays.copyOf(heap, heap.length * 2);
+        }
+    }
+
+    private int getLeftChildIndex(int parentIndex) { return 2 * parentIndex + 1; }
+    private int getRightChildIndex(int parentIndex) { return 2 * parentIndex + 2; }
+    private int getParentIndex(int childIndex) { return (childIndex - 1) / 2; }
+
+    private boolean hasLeftChild(int index) { return getLeftChildIndex(index) < size; }
+    private boolean hasRightChild(int index) { return getRightChildIndex(index) < size; }
+    private boolean hasParent(int index) { return getParentIndex(index) >= 0; }
+
+    private T leftChild(int index) { return heap[getLeftChildIndex(index)]; }
+    private T rightChild(int index) { return heap[getRightChildIndex(index)]; }
+    private T parent(int index) { return heap[getParentIndex(index)]; }
 
 }
