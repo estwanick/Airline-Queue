@@ -1,10 +1,10 @@
-public class Passenger {
+public class Passenger implements Comparable{
 
     private int passengerNumber;
     private String seatingClass;
-    private double arrivalTime;
+    private int arrivalTime;
 
-    public Passenger(int passengerNumber, String seatingClass, double arrivalTime) {
+    public Passenger(int passengerNumber, String seatingClass, int arrivalTime) {
         this.passengerNumber = passengerNumber;
         this.seatingClass = seatingClass;
         this.arrivalTime = arrivalTime;
@@ -24,5 +24,19 @@ public class Passenger {
 
     public void setSeatingClass(String seatingClass) {
         this.seatingClass = seatingClass;
+    }
+
+    public int getArrivalTime() { return arrivalTime; }
+
+    @Override
+    public int compareTo(Object o) {
+        if(this.getPassengerNumber() == ((Passenger)o).getPassengerNumber()) {
+            return 0;
+        } else if (this.getArrivalTime() > ((Passenger)o).getArrivalTime()){
+            return 1;
+        } else {
+            return -1;
+        }
+
     }
 }

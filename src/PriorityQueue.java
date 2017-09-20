@@ -15,7 +15,7 @@ public class PriorityQueue<T> {
     }
 
     public boolean isEmpty() { return size == 0; }
-    public int size() { return size; }
+    public int getSize() { return size; }
 
     private void upHeap() {
         int index = size - 1;
@@ -58,6 +58,7 @@ public class PriorityQueue<T> {
         if(size == 0) throw new IllegalStateException();
         T minItem = heap[0];
         heap[0] = heap[size - 1];
+        heap[size - 1] = null;
         size--;
         downHeap();
         return minItem;
@@ -73,7 +74,7 @@ public class PriorityQueue<T> {
     }
 
     private boolean lessThan(T x, T y) {
-        return ((Comparable<T>) x).compareTo(y) > 0;
+        return ((Comparable<T>) x).compareTo(y) < 0;
     }
 
     private void swap(int x, int y) {
