@@ -14,22 +14,52 @@ public class Dispatch {
     Queue coachClass_station2 = new Queue<Integer>();
     Queue coachClass_station3 = new Queue<Integer>();
     PriorityQueue fcPassengers = new PriorityQueue<Passenger>(10);
-    PriorityQueue ccPassengers = new PriorityQueue<Passenger>(10);
+    PriorityQueue ccPassengers = new PriorityQueue<Passenger>(30);
 
 
     public Dispatch(double avgCoachArrival, double avgCoachService, double avgFirstArrival, double avgFirstService) {
         fcPassengers = passengerGenerator(10, CONSTANTS.FIRSTCLASS);
-        //passengerGenerator(ccPassengers, 10, CONSTANTS.COACHCLASS);
+        ccPassengers = passengerGenerator(10, CONSTANTS.COACHCLASS);
         this.avgCoachArrival = avgCoachArrival;
         this.avgCoachService = avgCoachService;
         this.avgFirstArrival = avgFirstArrival;
         this.avgFirstService = avgFirstService;
-
         initializeServiceQueues();
+        startBoarding();
     }
 
     public void startBoarding() {
+        inOrderDisperal();
+    }
 
+    private void inOrderDisperal() {
+        while(fcPassengers.getSize() > 0 || ccPassengers.getSize() > 0) {
+            if(fcPassengers.getSize() > 0 && ccPassengers.getSize() > 0) {
+                if(lessThan((Passenger)fcPassengers.peek(), (Passenger)ccPassengers.peek())) {
+                    Passenger fp = (Passenger)fcPassengers.fetchMin();
+                    System.out.println("Popped: FC" + fp.getPassengerNumber());
+                } else {
+                    Passenger cp = (Passenger)ccPassengers.fetchMin();
+                    System.out.println("Popped: CC" + cp.getPassengerNumber());
+                }
+            } else {
+                if(fcPassengers.getSize() - 1 > 0) {
+                    Passenger fp = (Passenger)fcPassengers.fetchMin();
+                    System.out.println("Popped last: FC" + fp.getPassengerNumber());
+                } else if(ccPassengers.getSize() - 1 > 0) {
+                    Passenger cp = (Passenger)fcPassengers.fetchMin();
+                    System.out.println("Popped last: CC" + cp.getPassengerNumber());
+                }
+            }
+        }
+    }
+
+    private boolean greaterThan(Passenger x, Passenger y) {
+        return ((Comparable<Passenger>) x).compareTo(y) > 0;
+    }
+
+    private boolean lessThan(Passenger x, Passenger y) {
+        return ((Comparable<Passenger>) x).compareTo(y) < 0;
     }
 
     private void addToQueue(Passenger passenger) {
@@ -44,10 +74,27 @@ public class Dispatch {
 
     }
 
-    public void printPassengers() {
+    private PriorityQueue getFcPassengers() {
+        return fcPassengers;
+    }
+
+    private PriorityQueue getCcPassengers() {
+        return ccPassengers;
+    }
+
+    public void printFcPassengers() {
         while(fcPassengers.getSize() > 0) {
             Passenger removedPassenger = ((Passenger)fcPassengers.fetchMin());
             System.out.println("FC Passenger #" + removedPassenger.getPassengerNumber());
+            System.out.println("Arrival Time: " + removedPassenger.getArrivalTime());
+            System.out.println("---");
+        }
+    }
+
+    public void printCcPassengers() {
+        while(ccPassengers.getSize() > 0) {
+            Passenger removedPassenger = ((Passenger)ccPassengers.fetchMin());
+            System.out.println("CC Passenger #" + removedPassenger.getPassengerNumber());
             System.out.println("Arrival Time: " + removedPassenger.getArrivalTime());
             System.out.println("---");
         }
