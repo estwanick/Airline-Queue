@@ -55,7 +55,7 @@ public class PriorityQueue<T> {
     }
 
     public T fetchMin() {
-        if(size == 0) throw new IllegalStateException();
+        if(size == 0) return null;
         T minItem = heap[0];
         heap[0] = heap[size - 1];
         heap[size - 1] = null;
@@ -65,7 +65,7 @@ public class PriorityQueue<T> {
     }
 
     public T peek() {
-        if(size == 0) throw new IllegalStateException();
+        if(size == 0) return null;
         return heap[0];
     }
 

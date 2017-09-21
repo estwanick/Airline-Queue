@@ -16,7 +16,10 @@ public class Queue<T>  implements  Iterable<T>{
         return first == null;
     }
 
-    //Should convert to priority queue
+    public Node peek() {
+        return first;
+    }
+
     public Queue<T> enqueue(T ele)
     {
         Node current = last;
