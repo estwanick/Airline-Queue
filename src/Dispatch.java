@@ -29,10 +29,10 @@ public class Dispatch {
     }
 
     public void startBoarding() {
-        inOrderDisperal();
+        inOrderDispersal();
     }
 
-    private void inOrderDisperal() {
+    private void inOrderDispersal() {
         while(fcPassengers.getSize() > 0 || ccPassengers.getSize() > 0) {
             if(fcPassengers.getSize() > 0 && ccPassengers.getSize() > 0) {
                 if(lessThan((Passenger)fcPassengers.peek(), (Passenger)ccPassengers.peek())) {
