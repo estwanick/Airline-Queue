@@ -31,8 +31,15 @@ public class Dispatch {
         //ccPassengers = passengerGenerator(10, CONSTANTS.COACHCLASS);
 
         fcPassengers.add(new Passenger(1, CONSTANTS.FIRSTCLASS, 5));
-        fcPassengers.add(new Passenger(1, CONSTANTS.FIRSTCLASS, 10));
-        fcPassengers.add(new Passenger(1, CONSTANTS.FIRSTCLASS, 15));
+        fcPassengers.add(new Passenger(2, CONSTANTS.FIRSTCLASS, 5));
+        fcPassengers.add(new Passenger(3, CONSTANTS.FIRSTCLASS, 6));
+        fcPassengers.add(new Passenger(4, CONSTANTS.FIRSTCLASS, 7));
+        ccPassengers.add(new Passenger(5, CONSTANTS.COACHCLASS, 5));
+        ccPassengers.add(new Passenger(6, CONSTANTS.COACHCLASS, 5));
+        ccPassengers.add(new Passenger(7, CONSTANTS.COACHCLASS, 6));
+        ccPassengers.add(new Passenger(8, CONSTANTS.COACHCLASS, 7));
+//        fcPassengers.add(new Passenger(4, CONSTANTS.FIRSTCLASS, 8));
+//        fcPassengers.add(new Passenger(5, CONSTANTS.FIRSTCLASS, 9));
 
 
         this.avgCoachArrival = avgCoachArrival;
@@ -44,7 +51,7 @@ public class Dispatch {
     }
 
     public void placeInQueue(Passenger passenger, int time) {
-        //System.out.println("Putting " + passenger.getPassengerNumber() + " in queue: " + passenger.getArrivalTime());
+        System.out.println("Putting " + passenger.getPassengerNumber() + " in queue: " + passenger.getArrivalTime());
 
         if(passenger.getSeatingClass() == CONSTANTS.FIRSTCLASS) {
             // Place in first class queue
@@ -71,32 +78,44 @@ public class Dispatch {
         Passenger cpMin;
         Boolean passengerFound;
         while(timer <= simulationDuration) {
-            //System.out.println(timer);
+            System.out.println(timer);
             fpPeek = (Passenger)fcPassengers.peek();
             cpPeek = (Passenger)ccPassengers.peek();
             passengerFound = false;
 
-            if(fpPeek != null && fpPeek.getArrivalTime() == timer) {
+//            if(fpPeek != null && fpPeek.getArrivalTime() == timer) {
+//                fpMin = (Passenger)fcPassengers.fetchMin();
+//                placeInQueue(fpMin, timer);
+//                passengerFound = true;
+//            }
+
+            while(fcPassengers.peek() != null && ((Passenger) fcPassengers.peek()).getArrivalTime() == timer) {
                 fpMin = (Passenger)fcPassengers.fetchMin();
                 placeInQueue(fpMin, timer);
-                passengerFound = true;
             }
 
-            if(cpPeek != null && cpPeek.getArrivalTime() == timer) {
+            while(ccPassengers.peek() != null && ((Passenger) ccPassengers.peek()).getArrivalTime() == timer) {
                 cpMin = (Passenger)ccPassengers.fetchMin();
                 placeInQueue(cpMin, timer);
-                passengerFound = true;
             }
 
-            processQueues(timer);
+            timer++;
+
+//            if(cpPeek != null && cpPeek.getArrivalTime() == timer) {
+//                cpMin = (Passenger)ccPassengers.fetchMin();
+//                placeInQueue(cpMin, timer);
+//                passengerFound = true;
+//            }
+
+            //processQueues(timer);
 
             //if station fc1 fc2 are empty process passenger for x time, else place in queue
             //Add station listeners
-            fc1.processPassengers(fcStationsLine, timer);
-
-            if(!passengerFound){
-                timer++;
-            }
+//            fc1.processPassengers(fcStationsLine, timer);
+//
+//            if(!passengerFound){
+//                timer++;
+//            }
 
 //            while(fcPassengers.getSize() > 0 || ccPassengers.getSize() > 0) {
 //                if(fcPassengers.getSize() > 0 && ccPassengers.getSize() > 0) {

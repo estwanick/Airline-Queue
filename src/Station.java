@@ -27,7 +27,7 @@ public class Station {
     public boolean processPassengers(Queue passengers, int time) {
         //System.out.println(passengers + " at time " + time);
 
-        if(passengers.getTotal() != 0) {
+        if(passengers.getTotal() > 0) {
             Passenger passenger = (Passenger) passengers.peek().getData();
             if(passenger.getArrivalTime() <= time) {
 
