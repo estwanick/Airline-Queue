@@ -51,7 +51,7 @@ public class Dispatch {
     }
 
     public void placeInQueue(Passenger passenger, int time) {
-        System.out.println("Putting " + passenger.getPassengerNumber() + " in queue: " + passenger.getArrivalTime());
+        //System.out.println("\t Putting " + passenger.getPassengerNumber() + " in queue: " + passenger.getArrivalTime());
 
         if(passenger.getSeatingClass() == CONSTANTS.FIRSTCLASS) {
             // Place in first class queue
@@ -60,10 +60,6 @@ public class Dispatch {
         } else {
             // Place in coach, or first class if all coach queues are filled and there are empty fc queues
         }
-
-    }
-
-    public void processQueues(int time) {
 
     }
 
@@ -78,16 +74,7 @@ public class Dispatch {
         Passenger cpMin;
         Boolean passengerFound;
         while(timer <= simulationDuration) {
-            System.out.println(timer);
-            fpPeek = (Passenger)fcPassengers.peek();
-            cpPeek = (Passenger)ccPassengers.peek();
-            passengerFound = false;
-
-//            if(fpPeek != null && fpPeek.getArrivalTime() == timer) {
-//                fpMin = (Passenger)fcPassengers.fetchMin();
-//                placeInQueue(fpMin, timer);
-//                passengerFound = true;
-//            }
+            System.out.println("Time: " + timer + " ");
 
             while(fcPassengers.peek() != null && ((Passenger) fcPassengers.peek()).getArrivalTime() == timer) {
                 fpMin = (Passenger)fcPassengers.fetchMin();
@@ -99,15 +86,17 @@ public class Dispatch {
                 placeInQueue(cpMin, timer);
             }
 
-            timer++;
+            fc1.processPassengers(fcStationsLine, timer);
+            fc2.processPassengers(fcStationsLine, timer);
 
+
+            timer++;
 //            if(cpPeek != null && cpPeek.getArrivalTime() == timer) {
 //                cpMin = (Passenger)ccPassengers.fetchMin();
 //                placeInQueue(cpMin, timer);
 //                passengerFound = true;
 //            }
 
-            //processQueues(timer);
 
             //if station fc1 fc2 are empty process passenger for x time, else place in queue
             //Add station listeners
@@ -171,18 +160,6 @@ public class Dispatch {
 
     private boolean lessThan(Passenger x, Passenger y) {
         return ((Comparable<Passenger>) x).compareTo(y) < 0;
-    }
-
-    private void addToQueue(Passenger passenger) {
-
-    }
-
-    private void getServiceTime(String flightClass) {
-
-    }
-
-    private void setArrivalTime(String flightClass) {
-
     }
 
     private PriorityQueue getFcPassengers() {
