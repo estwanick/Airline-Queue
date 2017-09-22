@@ -36,10 +36,12 @@ public class Dispatch {
         fcPassengers.add(new Passenger(4, CONSTANTS.FIRSTCLASS, 7));
         fcPassengers.add(new Passenger(5, CONSTANTS.FIRSTCLASS, 7));
         fcPassengers.add(new Passenger(6, CONSTANTS.FIRSTCLASS, 7));
-        ccPassengers.add(new Passenger(5, CONSTANTS.COACHCLASS, 5));
-        ccPassengers.add(new Passenger(6, CONSTANTS.COACHCLASS, 5));
-        ccPassengers.add(new Passenger(7, CONSTANTS.COACHCLASS, 6));
-        ccPassengers.add(new Passenger(8, CONSTANTS.COACHCLASS, 7));
+        ccPassengers.add(new Passenger(11, CONSTANTS.COACHCLASS, 5));
+        ccPassengers.add(new Passenger(12, CONSTANTS.COACHCLASS, 15));
+        ccPassengers.add(new Passenger(13, CONSTANTS.COACHCLASS, 6));
+        ccPassengers.add(new Passenger(14, CONSTANTS.COACHCLASS, 7));
+        ccPassengers.add(new Passenger(15, CONSTANTS.COACHCLASS, 17));
+        ccPassengers.add(new Passenger(16, CONSTANTS.COACHCLASS, 7));
 //        fcPassengers.add(new Passenger(4, CONSTANTS.FIRSTCLASS, 8));
 //        fcPassengers.add(new Passenger(5, CONSTANTS.FIRSTCLASS, 9));
 
@@ -61,8 +63,8 @@ public class Dispatch {
 
         } else {
             // Place in coach, or first class if all coach queues are filled and there are empty fc queues
+            ccStationsLine.enqueue(passenger);
         }
-
     }
 
     public void startSimulation() {
@@ -90,6 +92,9 @@ public class Dispatch {
 
             fc1.processPassengers(fcStationsLine, timer);
             fc2.processPassengers(fcStationsLine, timer);
+            cc1.processPassengers(ccStationsLine, timer);
+            cc2.processPassengers(ccStationsLine, timer);
+            cc3.processPassengers(ccStationsLine, timer);
 
 
             timer++;
