@@ -34,6 +34,8 @@ public class Dispatch {
         fcPassengers.add(new Passenger(2, CONSTANTS.FIRSTCLASS, 5));
         fcPassengers.add(new Passenger(3, CONSTANTS.FIRSTCLASS, 6));
         fcPassengers.add(new Passenger(4, CONSTANTS.FIRSTCLASS, 7));
+        fcPassengers.add(new Passenger(5, CONSTANTS.FIRSTCLASS, 7));
+        fcPassengers.add(new Passenger(6, CONSTANTS.FIRSTCLASS, 7));
         ccPassengers.add(new Passenger(5, CONSTANTS.COACHCLASS, 5));
         ccPassengers.add(new Passenger(6, CONSTANTS.COACHCLASS, 5));
         ccPassengers.add(new Passenger(7, CONSTANTS.COACHCLASS, 6));
