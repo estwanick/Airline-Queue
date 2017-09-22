@@ -17,7 +17,12 @@ public class Queue<T>  implements  Iterable<T>{
     }
 
     public Node peek() {
+        if(total == 0) return null;
         return first;
+    }
+
+    public int getTotal() {
+        return total;
     }
 
     public Queue<T> enqueue(T ele)

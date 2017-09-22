@@ -8,7 +8,7 @@ public class Station {
         this.type = type;
     }
 
-    public boolean isBusy() {
+    public boolean getBusy() {
         return busy;
     }
 
@@ -24,7 +24,29 @@ public class Station {
         this.type = type;
     }
 
-    public boolean processing(Passenger passenger, int time) {
+    public boolean processPassengers(Queue passengers, int time) {
+        //System.out.println(passengers + " at time " + time);
+
+        if(passengers.getTotal() != 0) {
+            Passenger passenger = (Passenger) passengers.peek().getData();
+            if(passenger.getArrivalTime() <= time) {
+
+                if(passenger.getStartProcessingTime() > 0 &&
+                        time == passenger.getStartProcessingTime() + passenger.getProcessingDuration()) {
+                    passengers.dequeue();
+
+                    System.out.println("Finished " + passenger.getPassengerNumber() + " at time " + time);
+
+                } else if(passenger.getStartProcessingTime() == 0) {
+                    passenger.setStartProcessingTime(time);
+                    passenger.setProcessingDuration(2);
+                    System.out.println("Started " + passenger.getPassengerNumber() + " at time " + time);
+                }
+
+
+            }
+        }
+
         return true;
     }
 }

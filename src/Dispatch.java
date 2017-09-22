@@ -22,13 +22,19 @@ public class Dispatch {
     Station cc2 = new Station(CONSTANTS.COACHCLASS);
     Station cc3 = new Station(CONSTANTS.COACHCLASS);
 
-    PriorityQueue fcPassengers = new PriorityQueue<Passenger>(10);
-    PriorityQueue ccPassengers = new PriorityQueue<Passenger>(30);
+    PriorityQueue fcPassengers = new PriorityQueue<Passenger>(4);
+    PriorityQueue ccPassengers = new PriorityQueue<Passenger>(4);
 
 
     public Dispatch(int simulationDuration, double avgCoachArrival, double avgCoachService, double avgFirstArrival, double avgFirstService) {
-        fcPassengers = passengerGenerator(10, CONSTANTS.FIRSTCLASS);
-        ccPassengers = passengerGenerator(10, CONSTANTS.COACHCLASS);
+        //fcPassengers = passengerGenerator(10, CONSTANTS.FIRSTCLASS);
+        //ccPassengers = passengerGenerator(10, CONSTANTS.COACHCLASS);
+
+        fcPassengers.add(new Passenger(1, CONSTANTS.FIRSTCLASS, 5));
+        fcPassengers.add(new Passenger(1, CONSTANTS.FIRSTCLASS, 10));
+        fcPassengers.add(new Passenger(1, CONSTANTS.FIRSTCLASS, 15));
+
+
         this.avgCoachArrival = avgCoachArrival;
         this.avgCoachService = avgCoachService;
         this.avgFirstArrival = avgFirstArrival;
@@ -37,14 +43,12 @@ public class Dispatch {
         startSimulation();
     }
 
-    public void placeInQueue(Passenger passenger) {
-        System.out.println("Putting " + passenger.getPassengerNumber() + " in queue: " + passenger.getArrivalTime());
+    public void placeInQueue(Passenger passenger, int time) {
+        //System.out.println("Putting " + passenger.getPassengerNumber() + " in queue: " + passenger.getArrivalTime());
 
         if(passenger.getSeatingClass() == CONSTANTS.FIRSTCLASS) {
             // Place in first class queue
             fcStationsLine.enqueue(passenger);
-            //if station fc1 fc2 are empty process passenger for x time, else place in queue
-
 
         } else {
             // Place in coach, or first class if all coach queues are filled and there are empty fc queues
@@ -74,22 +78,25 @@ public class Dispatch {
 
             if(fpPeek != null && fpPeek.getArrivalTime() == timer) {
                 fpMin = (Passenger)fcPassengers.fetchMin();
-                placeInQueue(fpMin);
+                placeInQueue(fpMin, timer);
                 passengerFound = true;
             }
 
             if(cpPeek != null && cpPeek.getArrivalTime() == timer) {
                 cpMin = (Passenger)ccPassengers.fetchMin();
-                placeInQueue(cpMin);
+                placeInQueue(cpMin, timer);
                 passengerFound = true;
             }
 
             processQueues(timer);
 
+            //if station fc1 fc2 are empty process passenger for x time, else place in queue
+            //Add station listeners
+            fc1.processPassengers(fcStationsLine, timer);
+
             if(!passengerFound){
                 timer++;
             }
-
 
 //            while(fcPassengers.getSize() > 0 || ccPassengers.getSize() > 0) {
 //                if(fcPassengers.getSize() > 0 && ccPassengers.getSize() > 0) {
