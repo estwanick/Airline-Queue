@@ -33,36 +33,58 @@ public class Station {
         this.currentPassenger = currentPassenger;
     }
 
-    public boolean processPassengers(Queue passengers, int time) {
-        //System.out.println(passengers + " at time " + time);
+    public void processPassengers(Queue passengerQueue, int time) {
         Passenger passenger = getCurrentPassenger();
-
-        if(passengers.getTotal() > 0 || getCurrentPassenger() != null) {
-
+        if(passengerQueue.getTotal() > 0 || getCurrentPassenger() != null) {
             if(passenger == null) {
-                setCurrentPassenger((Passenger)passengers.dequeue().getData());
+                setCurrentPassenger((Passenger)passengerQueue.dequeue().getData());
                 passenger = getCurrentPassenger();
             }
-
             if(passenger.getArrivalTime() <= time) {
-
                 if(passenger.getStartProcessingTime() > 0 &&
                         time == passenger.getStartProcessingTime() + passenger.getProcessingDuration()) {
-
-                    currentPassenger = null;
-                    System.out.println("\t\t Finished " + passenger.getPassengerNumber() + " at time " + time);
+                    currentPassenger = null; //Ready to process new passenger
+                    System.out.println("\t\t" + getType() + ": Finished " + passenger.getSeatingClass() + passenger.getPassengerNumber() + " at time " + time);
 
                 } else if(passenger.getStartProcessingTime() == 0) {
-
                     passenger.setStartProcessingTime(time);
                     passenger.setProcessingDuration(2);
-                    System.out.println("\t\t Started " + passenger.getPassengerNumber() + " at time " + time);
+                    System.out.println("\t\t" + getType() + ": Started " + passenger.getSeatingClass() + passenger.getPassengerNumber() + " at time " + time);
                 }
-
-
             }
         }
-
-        return true;
     }
+
+    /*
+        This method will process first class customers, if all coach stations are busy and there are available
+        first class stations this first class station will process coach customers
+     */
+//    public void processPassengers(Queue fcQueue, Queue ccQueue, int time) {
+//        Passenger passenger = getCurrentPassenger();
+//        if(fcQueue.getTotal() > 0 || ccQueue.getTotal() > 0 || getCurrentPassenger() != null) {
+//            if(passenger == null) {
+//                if(fcQueue.getTotal() == 0 && ccQueue.getTotal() > 0) {
+//                    setCurrentPassenger((Passenger)ccQueue.dequeue().getData());
+//                    passenger = getCurrentPassenger();
+//                } else {
+//                    setCurrentPassenger((Passenger)fcQueue.dequeue().getData());
+//                    passenger = getCurrentPassenger();
+//                }
+//
+//
+//            }
+//            if(passenger.getArrivalTime() <= time) {
+//                if(passenger.getStartProcessingTime() > 0 &&
+//                        time == passenger.getStartProcessingTime() + passenger.getProcessingDuration()) {
+//                    currentPassenger = null; //Ready to process new passenger
+//                    System.out.println("\t\t" + getType() + ": Finished " + passenger.getSeatingClass() + passenger.getPassengerNumber() + " at time " + time);
+//
+//                } else if(passenger.getStartProcessingTime() == 0) {
+//                    passenger.setStartProcessingTime(time);
+//                    passenger.setProcessingDuration(2);
+//                    System.out.println("\t\t" + getType() + ": Started " + passenger.getSeatingClass() + passenger.getPassengerNumber() + " at time " + time);
+//                }
+//            }
+//        }
+//    }
 }

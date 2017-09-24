@@ -15,12 +15,12 @@ public class Dispatch {
     Queue fcStationsLine = new Queue<Queue>();
     Queue ccStationsLine = new Queue<Queue>();
 
-    Station fc1 = new Station(CONSTANTS.FIRSTCLASS);
-    Station fc2 = new Station(CONSTANTS.FIRSTCLASS);
+    Station fc1 = new Station(CONSTANTS.FIRSTCLASS + "1");
+    Station fc2 = new Station(CONSTANTS.FIRSTCLASS + "2");
 
-    Station cc1 = new Station(CONSTANTS.COACHCLASS);
-    Station cc2 = new Station(CONSTANTS.COACHCLASS);
-    Station cc3 = new Station(CONSTANTS.COACHCLASS);
+    Station cc1 = new Station(CONSTANTS.COACHCLASS + "1");
+    Station cc2 = new Station(CONSTANTS.COACHCLASS + "2");
+    Station cc3 = new Station(CONSTANTS.COACHCLASS + "3");
 
     PriorityQueue fcPassengers = new PriorityQueue<Passenger>(4);
     PriorityQueue ccPassengers = new PriorityQueue<Passenger>(4);
@@ -42,9 +42,6 @@ public class Dispatch {
         ccPassengers.add(new Passenger(14, CONSTANTS.COACHCLASS, 7));
         ccPassengers.add(new Passenger(15, CONSTANTS.COACHCLASS, 17));
         ccPassengers.add(new Passenger(16, CONSTANTS.COACHCLASS, 7));
-//        fcPassengers.add(new Passenger(4, CONSTANTS.FIRSTCLASS, 8));
-//        fcPassengers.add(new Passenger(5, CONSTANTS.FIRSTCLASS, 9));
-
 
         this.avgCoachArrival = avgCoachArrival;
         this.avgCoachService = avgCoachService;
@@ -63,7 +60,13 @@ public class Dispatch {
 
         } else {
             // Place in coach, or first class if all coach queues are filled and there are empty fc queues
-            ccStationsLine.enqueue(passenger);
+
+            if(ccStationsLine.isEmpty()) {
+                ccStationsLine.enqueue(passenger);
+            } else if(fcStationsLine.isEmpty()) {
+                fcStationsLine.enqueue(passenger);
+            }
+
         }
     }
 
@@ -92,51 +95,17 @@ public class Dispatch {
 
             fc1.processPassengers(fcStationsLine, timer);
             fc2.processPassengers(fcStationsLine, timer);
+            //check if cc1, cc2, cc3 are busy if so check if fc1, fc2 are busy
+            //if all coach stations are busy process coach at fc
+            //if all fc are busy place passenger at coach station 
             cc1.processPassengers(ccStationsLine, timer);
             cc2.processPassengers(ccStationsLine, timer);
             cc3.processPassengers(ccStationsLine, timer);
 
 
             timer++;
-//            if(cpPeek != null && cpPeek.getArrivalTime() == timer) {
-//                cpMin = (Passenger)ccPassengers.fetchMin();
-//                placeInQueue(cpMin, timer);
-//                passengerFound = true;
-//            }
 
-
-            //if station fc1 fc2 are empty process passenger for x time, else place in queue
-            //Add station listeners
-//            fc1.processPassengers(fcStationsLine, timer);
-//
-//            if(!passengerFound){
-//                timer++;
-//            }
-
-//            while(fcPassengers.getSize() > 0 || ccPassengers.getSize() > 0) {
-//                if(fcPassengers.getSize() > 0 && ccPassengers.getSize() > 0) {
-//                    if(lessThan((Passenger)fcPassengers.peek(), (Passenger)ccPassengers.peek())) {
-//                        fp = (Passenger)fcPassengers.fetchMin();
-//                        //System.out.println("Popped: FC" + fp.getPassengerNumber());
-//                    } else {
-//                        cp = (Passenger)ccPassengers.fetchMin();
-//                        //System.out.println("Popped: CC" + cp.getPassengerNumber());
-//                    }
-//                } else {
-//                    if(fcPassengers.getSize() - 1 > 0) {
-//                        fp = (Passenger)fcPassengers.fetchMin();
-//                        //System.out.println("Popped last: FC" + fp.getPassengerNumber());
-//                    } else if(ccPassengers.getSize() - 1 > 0) {
-//                        cp = (Passenger)fcPassengers.fetchMin();
-//                        //System.out.println("Popped last: CC" + cp.getPassengerNumber());
-//                    }
-//                }
-//            }
         }
-    }
-
-    public void startBoarding() {
-        inOrderDispersal();
     }
 
     private void inOrderDispersal() {
