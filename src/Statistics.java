@@ -4,6 +4,7 @@ import java.util.Iterator;
 public class Statistics {
 
     int totalDuration;
+    int allowedDuration;
     int fcMaxQueueLength = 0;
     int ccMaxQueueLength = 0;
     Queue fc1Completed = new Queue<Passenger>();
@@ -28,10 +29,11 @@ public class Statistics {
         System.out.println();
         System.out.println();
         System.out.println();
-        System.out.println("Statistics --------------------");
-        System.out.println("Total Duration: " + getTotalDuration());
-        System.out.println("Coach Max Queue length: " + getCcMaxQueueLength());
-        System.out.println("First Max Queue length: " + getFcMaxQueueLength());
+        System.out.println("-------------------- Statistics --------------------");
+        System.out.println("The Queues closed at the: " + getAllowedDuration() + " minute");
+        System.out.println("Total Duration of the simulation: " + getTotalDuration() + " minutes");
+        System.out.println("Coach class Max Queue length: " + getCcMaxQueueLength());
+        System.out.println("First class Max Queue length: " + getFcMaxQueueLength());
         getQueueStats("FIRSTCLASS-1");
         getQueueStats("FIRSTCLASS-2");
         getQueueStats("COACHCLASS-1");
@@ -103,6 +105,14 @@ public class Statistics {
                 break;
         }
         globalCompleted.enqueue(passenger);
+    }
+
+    public int getAllowedDuration() {
+        return allowedDuration;
+    }
+
+    public void setAllowedDuration(int allowedDuration) {
+        this.allowedDuration = allowedDuration;
     }
 
     public int getTotalDuration() {
