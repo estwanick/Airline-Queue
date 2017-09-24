@@ -5,8 +5,11 @@ public class Statistics {
     int totalDuration;
     int fcMaxQueueLength = 0;
     int ccMaxQueueLength = 0;
-    Queue completed = new Queue<Passenger>();
-    HashMap<String, Queue> stationInfo = new HashMap<>();
+    Queue fc1Completed = new Queue<Passenger>();
+    Queue fc2Completed = new Queue<Passenger>();
+    Queue cc1Completed = new Queue<Passenger>();
+    Queue cc2Completed = new Queue<Passenger>();
+    Queue cc3Completed = new Queue<Passenger>();
 
     public Statistics() { }
 
@@ -15,12 +18,29 @@ public class Statistics {
         System.out.println("Total Duration: " + getTotalDuration());
         System.out.println("Coach Max Queue length: " + getCcMaxQueueLength());
         System.out.println("First Max Queue length: " + getFcMaxQueueLength());
-        completed.getTotal();
+
     }
 
     public void enqueue(Passenger passenger, String station) {
-        completed.enqueue(passenger);
-        stationInfo.put(station, completed);
+        switch(station) {
+            case "FIRSTCLASS-1":
+                fc1Completed.enqueue(passenger);
+                break;
+            case "FIRSTCLASS-2":
+                fc2Completed.enqueue(passenger);
+                break;
+            case "COACHCLASS-1":
+                cc1Completed.enqueue(passenger);
+                break;
+            case "COACHCLASS-2":
+                cc2Completed.enqueue(passenger);
+                break;
+            case "COACHCLASS-3":
+                cc3Completed.enqueue(passenger);
+                break;
+            default:
+                break;
+        }
     }
 
     public int getTotalDuration() {

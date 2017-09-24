@@ -47,7 +47,7 @@ public class Dispatch {
         fc1 = new Station(CONSTANTS.FIRSTCLASS + "-1", avgFirstService, avgCoachService, stats);
         fc2 = new Station(CONSTANTS.FIRSTCLASS + "-2", avgFirstService, avgCoachService, stats);
         cc1 = new Station(CONSTANTS.COACHCLASS + "-1", avgFirstService, avgCoachService, stats);
-        cc2 = new Station(CONSTANTS.COACHCLASS + "-3", avgFirstService, avgCoachService, stats);
+        cc2 = new Station(CONSTANTS.COACHCLASS + "-2", avgFirstService, avgCoachService, stats);
         cc3 = new Station(CONSTANTS.COACHCLASS + "-3", avgFirstService, avgCoachService, stats);
 
         this.avgCoachArrival = avgCoachArrival;
