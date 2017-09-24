@@ -1,10 +1,10 @@
 public class Main {
     public static void main(String[] args) {
 
-        Dispatch passengerDispatch = new Dispatch(40,
-                2,2,
+        Dispatch passengerDispatch = new Dispatch(400,
+                2,3,
                 5,6, 3, 5,
-                10, 10);
+                100, 300);
 
         System.out.print("Done");
     }

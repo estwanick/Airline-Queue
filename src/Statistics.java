@@ -21,15 +21,23 @@ public class Statistics {
         qMap.put("COACHCLASS-1", cc1Completed);
         qMap.put("COACHCLASS-2", cc2Completed);
         qMap.put("COACHCLASS-3", cc3Completed);
-        qMap.put("ALL", globalCompleted);
+        qMap.put("ALL-STATIONS", globalCompleted);
     }
 
     public void outputStats() {
-        System.out.println("--------------------");
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println("Statistics --------------------");
         System.out.println("Total Duration: " + getTotalDuration());
         System.out.println("Coach Max Queue length: " + getCcMaxQueueLength());
         System.out.println("First Max Queue length: " + getFcMaxQueueLength());
         getQueueStats("FIRSTCLASS-1");
+        getQueueStats("FIRSTCLASS-2");
+        getQueueStats("COACHCLASS-1");
+        getQueueStats("COACHCLASS-2");
+        getQueueStats("COACHCLASS-3");
+        //getQueueStats("ALL-STATIONS");
     }
 
     private void getQueueStats(String station) {
@@ -37,10 +45,12 @@ public class Statistics {
         Queue completed = qMap.get(station);
         Iterator<Passenger> passengerIterator = completed.iterator();
         Passenger passenger;
+        int totalDuration = getTotalDuration();
         int passengerCount = completed.getTotal();
-        int avgWaitingTime = 0;
+        double avgWaitingTime = 0.0;
         int maxWaitingTime = 0;
-        int occupancyRate = 0;
+        double occupancyRate = 0.0;
+        int sumProcessingTime = 0;
         int waitingTime = 0;
         int sumWaitingTime = 0;
 
@@ -48,17 +58,19 @@ public class Statistics {
             passenger = passengerIterator.next();
             waitingTime = passenger.getStartProcessingTime() - passenger.getArrivalTime();
             sumWaitingTime += waitingTime;
-
+            sumProcessingTime += passenger.getProcessingDuration();
             if(waitingTime > maxWaitingTime) {
                 maxWaitingTime = waitingTime;
             }
 
-            logPassenger(passenger);
+            //logPassenger(passenger);
         }
 
-        avgWaitingTime = sumWaitingTime/passengerCount;
-        System.out.println("Max waiting time: " + maxWaitingTime);
-        System.out.println("Average waiting time: " +  avgWaitingTime);
+        occupancyRate = ((double) sumProcessingTime / totalDuration) * 100.0;
+        avgWaitingTime = ((double) sumWaitingTime/passengerCount) * 60.0;
+        System.out.println("\t\t Max waiting time: " + maxWaitingTime + " minutes");
+        System.out.println("\t\t Average waiting time: " +  avgWaitingTime + " seconds");
+        System.out.println("\t\t Occupancy rate: " +  String.format("%2.02f", occupancyRate) + "%");
     }
 
     private void logPassenger(Passenger passenger) {

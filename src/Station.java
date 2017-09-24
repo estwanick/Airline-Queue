@@ -63,7 +63,7 @@ public class Station {
                     setCurrentPassenger(null);
                     passenger.setProcessed(true);
                     stats.enqueue(passenger, getType());
-                    System.out.println("\t\t" + getType() + ": Finished " + passenger.getSeatingClass() + " Passenger " + passenger.getPassengerNumber() + " at time " + time);
+                    System.out.println("\t\t Station: " + getType() + ": Finished " + passenger.getSeatingClass() + " Passenger " + passenger.getPassengerNumber() + " at time " + time);
                 } else if(passenger.getStartProcessingTime() == 0) {
                     passenger.setStartProcessingTime(time);
                     if(passenger.getSeatingClass() == CONSTANTS.FIRSTCLASS) {
@@ -71,7 +71,7 @@ public class Station {
                     } else {
                         passenger.setProcessingDuration(getCcServiceTime() + randomInRange(0, serviceRange));
                     }
-                    System.out.println("\t\t" + getType() + ": Started " + passenger.getSeatingClass() + " Passenger " + passenger.getPassengerNumber() + " at time " + time + ", servicing time " + passenger.getProcessingDuration());
+                    System.out.println("\t\t Station: " + getType() + ": Started " + passenger.getSeatingClass() + " Passenger " + passenger.getPassengerNumber() + " at time " + time + ", servicing time " + passenger.getProcessingDuration());
                 }
             }
         }

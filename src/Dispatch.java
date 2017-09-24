@@ -21,34 +21,6 @@ public class Dispatch {
 
     public Dispatch(int simulationDuration, int avgCoachArrival, int avgCoachService, int avgFirstArrival, int avgFirstService,
                     int absLateRange, int avgServiceBuffer, int fcPassengerCount, int ccPassengerCount) {
-        fcPassengers = passengerGenerator(fcPassengerCount, CONSTANTS.FIRSTCLASS, avgFirstArrival, absLateRange);
-        ccPassengers = passengerGenerator(ccPassengerCount, CONSTANTS.COACHCLASS, avgCoachArrival, absLateRange);
-//        printFcPassengers();
-//        printCcPassengers();
-
-
-//        fcPassengers.add(new Passenger(1, CONSTANTS.FIRSTCLASS, 5));
-//        fcPassengers.add(new Passenger(2, CONSTANTS.FIRSTCLASS, 5));
-//        fcPassengers.add(new Passenger(3, CONSTANTS.FIRSTCLASS, 6));
-//        fcPassengers.add(new Passenger(4, CONSTANTS.FIRSTCLASS, 7));
-//        fcPassengers.add(new Passenger(5, CONSTANTS.FIRSTCLASS, 7));
-//        fcPassengers.add(new Passenger(6, CONSTANTS.FIRSTCLASS, 7));
-//        fcPassengers.add(new Passenger(7, CONSTANTS.FIRSTCLASS, 10));
-//        fcPassengers.add(new Passenger(8, CONSTANTS.FIRSTCLASS, 12));
-//        ccPassengers.add(new Passenger(11, CONSTANTS.COACHCLASS, 5));
-//        ccPassengers.add(new Passenger(11, CONSTANTS.COACHCLASS, 5));
-//        ccPassengers.add(new Passenger(13, CONSTANTS.COACHCLASS, 5));
-//        ccPassengers.add(new Passenger(14, CONSTANTS.COACHCLASS, 15));
-//        ccPassengers.add(new Passenger(15, CONSTANTS.COACHCLASS, 6));
-//        ccPassengers.add(new Passenger(16, CONSTANTS.COACHCLASS, 7));
-//        ccPassengers.add(new Passenger(17, CONSTANTS.COACHCLASS, 17));
-//        ccPassengers.add(new Passenger(18, CONSTANTS.COACHCLASS, 7));
-
-        fc1 = new Station(CONSTANTS.FIRSTCLASS + "-1", avgFirstService, avgCoachService, stats);
-        fc2 = new Station(CONSTANTS.FIRSTCLASS + "-2", avgFirstService, avgCoachService, stats);
-        cc1 = new Station(CONSTANTS.COACHCLASS + "-1", avgFirstService, avgCoachService, stats);
-        cc2 = new Station(CONSTANTS.COACHCLASS + "-2", avgFirstService, avgCoachService, stats);
-        cc3 = new Station(CONSTANTS.COACHCLASS + "-3", avgFirstService, avgCoachService, stats);
 
         this.avgCoachArrival = avgCoachArrival;
         this.avgCoachService = avgCoachService;
@@ -56,6 +28,16 @@ public class Dispatch {
         this.avgFirstService = avgFirstService;
         this.avgServiceBuffer = avgServiceBuffer;
         this.simulationDuration = simulationDuration;
+
+        fcPassengers = passengerGenerator(fcPassengerCount, CONSTANTS.FIRSTCLASS, avgFirstArrival, absLateRange);
+        ccPassengers = passengerGenerator(ccPassengerCount, CONSTANTS.COACHCLASS, avgCoachArrival, absLateRange);
+
+        fc1 = new Station(CONSTANTS.FIRSTCLASS + "-1", avgFirstService, avgCoachService, stats);
+        fc2 = new Station(CONSTANTS.FIRSTCLASS + "-2", avgFirstService, avgCoachService, stats);
+        cc1 = new Station(CONSTANTS.COACHCLASS + "-1", avgFirstService, avgCoachService, stats);
+        cc2 = new Station(CONSTANTS.COACHCLASS + "-2", avgFirstService, avgCoachService, stats);
+        cc3 = new Station(CONSTANTS.COACHCLASS + "-3", avgFirstService, avgCoachService, stats);
+
         startSimulation();
         stats.outputStats();
     }
@@ -64,19 +46,23 @@ public class Dispatch {
         //System.out.println("\t Putting " + passenger.getPassengerNumber() + " in queue: " + passenger.getArrivalTime());
         if(passenger.getSeatingClass() == CONSTANTS.FIRSTCLASS) {
             fcStationsLine.enqueue(passenger);
+            System.out.println("\t Putting " + passenger.getSeatingClass() + ": " + passenger.getPassengerNumber() + " in queue FC at time: " + passenger.getArrivalTime());
         } else {
             // Place in coach, or first class if all coach queues are filled and there are empty fc queues
             if(cc1.isBusy() && cc2.isBusy() && cc3.isBusy()) {
                 //System.out.println("all coach stations are busy over flow to first class if possible");
                 if(!fc1.isBusy() || !fc2.isBusy()) {
-                    System.out.println("over flow into fc station queue");
                     fcStationsLine.enqueue(passenger);
+                    System.out.println("over flow into fc station queue");
+                    System.out.println("\t Putting " + passenger.getSeatingClass() + ": " + passenger.getPassengerNumber() + " in queue FC at time: " + passenger.getArrivalTime());
                 } else {
-                    System.out.println("fc stations are busy over flow not possible, moving to coach queue");
                     ccStationsLine.enqueue(passenger);
+                    System.out.println("fc stations are busy over flow not possible, moving to coach queue");
+                    System.out.println("\t Putting " + passenger.getSeatingClass() + ": " + passenger.getPassengerNumber() + " in queue CC at time: " + passenger.getArrivalTime());
                 }
             } else {
                 ccStationsLine.enqueue(passenger);
+                System.out.println("\t Putting " + passenger.getSeatingClass() + ": " + passenger.getPassengerNumber() + " in queue CC at time: " + passenger.getArrivalTime());
             }
         }
     }
@@ -90,8 +76,10 @@ public class Dispatch {
 
             // Place passenger in queue when they arrive
             if(timer > simulationDuration) {
-                ccPassengers.emptyHeap();
-                fcPassengers.emptyHeap();
+                if(ccPassengers.getSize() > 0)
+                    ccPassengers.emptyHeap();
+                if(fcPassengers.getSize() > 0)
+                    fcPassengers.emptyHeap();
             } else {
                 while(fcPassengers.peek() != null && ((Passenger) fcPassengers.peek()).getArrivalTime() == timer) {
                     fpMin = (Passenger)fcPassengers.fetchMin();
