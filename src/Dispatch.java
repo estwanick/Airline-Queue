@@ -39,6 +39,7 @@ public class Dispatch {
         cc3 = new Station(CONSTANTS.COACHCLASS + "-3", avgFirstService, avgCoachService, stats);
 
         startSimulation();
+        stats.setAllowedDuration(simulationDuration);
         stats.outputStats();
     }
 
@@ -50,14 +51,14 @@ public class Dispatch {
         } else {
             // Place in coach, or first class if all coach queues are filled and there are empty fc queues
             if(cc1.isBusy() && cc2.isBusy() && cc3.isBusy()) {
-                //System.out.println("all coach stations are busy over flow to first class if possible");
+                System.out.println("\t **all coach stations are busy over flow to first class if possible");
                 if(!fc1.isBusy() || !fc2.isBusy()) {
                     fcStationsLine.enqueue(passenger);
-                    System.out.println("over flow into fc station queue");
+                    System.out.println("\t **over flow into fc station queue");
                     System.out.println("\t Putting " + passenger.getSeatingClass() + ": " + passenger.getPassengerNumber() + " in queue FC at time: " + passenger.getArrivalTime());
                 } else {
                     ccStationsLine.enqueue(passenger);
-                    System.out.println("fc stations are busy over flow not possible, moving to coach queue");
+                    System.out.println("\t **fc stations are busy over flow not possible, moving to coach queue");
                     System.out.println("\t Putting " + passenger.getSeatingClass() + ": " + passenger.getPassengerNumber() + " in queue CC at time: " + passenger.getArrivalTime());
                 }
             } else {
