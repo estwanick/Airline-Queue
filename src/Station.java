@@ -1,20 +1,16 @@
 public class Station {
 
-    private boolean busy;
     private String type;
     Passenger currentPassenger = null;
+    Statistics stats;
+    int fcServiceTime;
+    int ccServiceTime;
 
-    public Station(String type) {
-        this.busy = false;
+    public Station(String type, int fcServiceTime, int ccServiceTime, Statistics stats) {
         this.type = type;
-    }
-
-    public boolean getBusy() {
-        return busy;
-    }
-
-    public void setBusy(boolean busy) {
-        this.busy = busy;
+        this.stats = stats;
+        this.fcServiceTime = fcServiceTime;
+        this.ccServiceTime = ccServiceTime;
     }
 
     public String getType() {
@@ -23,6 +19,22 @@ public class Station {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public int getFcServiceTime() {
+        return fcServiceTime;
+    }
+
+    public void setFcServiceTime(int fcServiceTime) {
+        this.fcServiceTime = fcServiceTime;
+    }
+
+    public int getCcServiceTime() {
+        return ccServiceTime;
+    }
+
+    public void setCcServiceTime(int ccServiceTime) {
+        this.ccServiceTime = ccServiceTime;
     }
 
     private Passenger getCurrentPassenger() {
@@ -38,7 +50,7 @@ public class Station {
     }
 
 
-    public void processPassengers(Queue passengerQueue, int time) {
+    public void processPassengers(Queue passengerQueue, int time, int serviceRange) {
         Passenger passenger = getCurrentPassenger();
         if(passengerQueue.getTotal() > 0 || getCurrentPassenger() != null) {
             if(passenger == null) {
@@ -50,47 +62,22 @@ public class Station {
                         time == passenger.getStartProcessingTime() + passenger.getProcessingDuration()) {
                     setCurrentPassenger(null);
                     passenger.setProcessed(true);
-                    System.out.println("\t\t" + getType() + ": Finished " + passenger.getSeatingClass() + passenger.getPassengerNumber() + " at time " + time);
-
+                    stats.enqueue(passenger, getType());
+                    System.out.println("\t\t" + getType() + ": Finished " + passenger.getSeatingClass() + " Passenger " + passenger.getPassengerNumber() + " at time " + time);
                 } else if(passenger.getStartProcessingTime() == 0) {
                     passenger.setStartProcessingTime(time);
-                    passenger.setProcessingDuration(2);
-                    System.out.println("\t\t" + getType() + ": Started " + passenger.getSeatingClass() + passenger.getPassengerNumber() + " at time " + time);
+                    if(passenger.getSeatingClass() == CONSTANTS.FIRSTCLASS) {
+                        passenger.setProcessingDuration(getFcServiceTime() + randomInRange(0, serviceRange));
+                    } else {
+                        passenger.setProcessingDuration(getCcServiceTime() + randomInRange(0, serviceRange));
+                    }
+                    System.out.println("\t\t" + getType() + ": Started " + passenger.getSeatingClass() + " Passenger " + passenger.getPassengerNumber() + " at time " + time + ", servicing time " + passenger.getProcessingDuration());
                 }
             }
         }
     }
-
-    /*
-        This method will process first class customers, if all coach stations are busy and there are available
-        first class stations this first class station will process coach customers
-     */
-//    public void processPassengers(Queue fcQueue, Queue ccQueue, int time) {
-//        Passenger passenger = getCurrentPassenger();
-//        if(fcQueue.getTotal() > 0 || ccQueue.getTotal() > 0 || getCurrentPassenger() != null) {
-//            if(passenger == null) {
-//                if(fcQueue.getTotal() == 0 && ccQueue.getTotal() > 0) {
-//                    setCurrentPassenger((Passenger)ccQueue.dequeue().getData());
-//                    passenger = getCurrentPassenger();
-//                } else {
-//                    setCurrentPassenger((Passenger)fcQueue.dequeue().getData());
-//                    passenger = getCurrentPassenger();
-//                }
-//
-//
-//            }
-//            if(passenger.getArrivalTime() <= time) {
-//                if(passenger.getStartProcessingTime() > 0 &&
-//                        time == passenger.getStartProcessingTime() + passenger.getProcessingDuration()) {
-//                    currentPassenger = null; //Ready to process new passenger
-//                    System.out.println("\t\t" + getType() + ": Finished " + passenger.getSeatingClass() + passenger.getPassengerNumber() + " at time " + time);
-//
-//                } else if(passenger.getStartProcessingTime() == 0) {
-//                    passenger.setStartProcessingTime(time);
-//                    passenger.setProcessingDuration(2);
-//                    System.out.println("\t\t" + getType() + ": Started " + passenger.getSeatingClass() + passenger.getPassengerNumber() + " at time " + time);
-//                }
-//            }
-//        }
-//    }
+    //Move into utils class
+    private int randomInRange(int min, int max) {
+        return min + (int)(Math.random() * ((max - min) + 1));
+    }
 }

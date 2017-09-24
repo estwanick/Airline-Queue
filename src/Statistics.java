@@ -1,14 +1,26 @@
+import java.util.HashMap;
+
 public class Statistics {
 
     int totalDuration;
-    int fcMaxQueueLength;
-    int ccMaxQueueLength;
+    int fcMaxQueueLength = 0;
+    int ccMaxQueueLength = 0;
+    Queue completed = new Queue<Passenger>();
+    HashMap<String, Queue> stationInfo = new HashMap<>();
 
     public Statistics() { }
 
     public void outputStats() {
         System.out.println("--------------------");
         System.out.println("Total Duration: " + getTotalDuration());
+        System.out.println("Coach Max Queue length: " + getCcMaxQueueLength());
+        System.out.println("First Max Queue length: " + getFcMaxQueueLength());
+        completed.getTotal();
+    }
+
+    public void enqueue(Passenger passenger, String station) {
+        completed.enqueue(passenger);
+        stationInfo.put(station, completed);
     }
 
     public int getTotalDuration() {
@@ -24,7 +36,9 @@ public class Statistics {
     }
 
     public void setFcMaxQueueLength(int fcMaxQueueLength) {
-        this.fcMaxQueueLength = fcMaxQueueLength;
+        if(this.fcMaxQueueLength < fcMaxQueueLength) {
+            this.fcMaxQueueLength = fcMaxQueueLength;
+        }
     }
 
     public int getCcMaxQueueLength() {
@@ -32,6 +46,8 @@ public class Statistics {
     }
 
     public void setCcMaxQueueLength(int ccMaxQueueLength) {
-        this.ccMaxQueueLength = ccMaxQueueLength;
+        if(this.ccMaxQueueLength < ccMaxQueueLength) {
+            this.ccMaxQueueLength = ccMaxQueueLength;
+        }
     }
 }

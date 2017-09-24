@@ -64,6 +64,12 @@ public class PriorityQueue<T> {
         return minItem;
     }
 
+    public void emptyHeap() {
+        while(size > 0) {
+            fetchMin();
+        }
+    }
+
     public T peek() {
         if(size == 0) return null;
         return heap[0];
