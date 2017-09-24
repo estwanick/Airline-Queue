@@ -36,12 +36,16 @@ public class Dispatch {
         fcPassengers.add(new Passenger(4, CONSTANTS.FIRSTCLASS, 7));
         fcPassengers.add(new Passenger(5, CONSTANTS.FIRSTCLASS, 7));
         fcPassengers.add(new Passenger(6, CONSTANTS.FIRSTCLASS, 7));
+        fcPassengers.add(new Passenger(7, CONSTANTS.FIRSTCLASS, 10));
+        fcPassengers.add(new Passenger(8, CONSTANTS.FIRSTCLASS, 12));
         ccPassengers.add(new Passenger(11, CONSTANTS.COACHCLASS, 5));
-        ccPassengers.add(new Passenger(12, CONSTANTS.COACHCLASS, 15));
-        ccPassengers.add(new Passenger(13, CONSTANTS.COACHCLASS, 6));
-        ccPassengers.add(new Passenger(14, CONSTANTS.COACHCLASS, 7));
-        ccPassengers.add(new Passenger(15, CONSTANTS.COACHCLASS, 17));
+        ccPassengers.add(new Passenger(11, CONSTANTS.COACHCLASS, 5));
+        ccPassengers.add(new Passenger(13, CONSTANTS.COACHCLASS, 5));
+        ccPassengers.add(new Passenger(14, CONSTANTS.COACHCLASS, 15));
+        ccPassengers.add(new Passenger(15, CONSTANTS.COACHCLASS, 6));
         ccPassengers.add(new Passenger(16, CONSTANTS.COACHCLASS, 7));
+        ccPassengers.add(new Passenger(17, CONSTANTS.COACHCLASS, 17));
+        ccPassengers.add(new Passenger(18, CONSTANTS.COACHCLASS, 7));
 
         this.avgCoachArrival = avgCoachArrival;
         this.avgCoachService = avgCoachService;
@@ -53,20 +57,23 @@ public class Dispatch {
 
     public void placeInQueue(Passenger passenger, int time) {
         //System.out.println("\t Putting " + passenger.getPassengerNumber() + " in queue: " + passenger.getArrivalTime());
-
         if(passenger.getSeatingClass() == CONSTANTS.FIRSTCLASS) {
             // Place in first class queue
             fcStationsLine.enqueue(passenger);
-
         } else {
             // Place in coach, or first class if all coach queues are filled and there are empty fc queues
-
-            if(ccStationsLine.isEmpty()) {
+            if(cc1.isBusy() && cc2.isBusy() && cc3.isBusy()) {
+                System.out.println("all coach stations are busy over flow to first class if possible");
+                if(!fc1.isBusy() || !fc2.isBusy()) {
+                    System.out.println("over flow into fc station queue");
+                    fcStationsLine.enqueue(passenger);
+                } else {
+                    System.out.println("fc stations are busy over flow not possible, moving to coach queue");
+                    ccStationsLine.enqueue(passenger);
+                }
+            } else {
                 ccStationsLine.enqueue(passenger);
-            } else if(fcStationsLine.isEmpty()) {
-                fcStationsLine.enqueue(passenger);
             }
-
         }
     }
 
@@ -163,20 +170,6 @@ public class Dispatch {
             System.out.println("---");
         }
     }
-
-//    public void printPassengers() {
-//        Iterator<Passenger> fcIterator = fcPassengers.iterator();
-//        Iterator<Passenger> ccIterator = ccPassengers.iterator();
-//        System.out.println("Coach Passengers");
-//        while(ccIterator.hasNext()) {
-//            System.out.print(ccIterator.next().getPassengerNumber() + ", ");
-//        }
-//        System.out.println("");
-//        System.out.println("First Class Passengers");
-//        while(fcIterator.hasNext()) {
-//            System.out.print(fcIterator.next().getPassengerNumber()  + ", ");
-//        }
-//    }
 
     private PriorityQueue passengerGenerator(int passengerCount, String passengerClass) {
         PriorityQueue pq = new PriorityQueue(10);

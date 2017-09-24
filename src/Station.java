@@ -25,13 +25,18 @@ public class Station {
         this.type = type;
     }
 
-    public Passenger getCurrentPassenger() {
+    private Passenger getCurrentPassenger() {
         return currentPassenger;
     }
 
-    public void setCurrentPassenger(Passenger currentPassenger) {
+    private void setCurrentPassenger(Passenger currentPassenger) {
         this.currentPassenger = currentPassenger;
     }
+
+    public boolean isBusy() {
+        return getCurrentPassenger() != null;
+    }
+
 
     public void processPassengers(Queue passengerQueue, int time) {
         Passenger passenger = getCurrentPassenger();
@@ -43,7 +48,8 @@ public class Station {
             if(passenger.getArrivalTime() <= time) {
                 if(passenger.getStartProcessingTime() > 0 &&
                         time == passenger.getStartProcessingTime() + passenger.getProcessingDuration()) {
-                    currentPassenger = null; //Ready to process new passenger
+                    //currentPassenger = null; //Ready to process new passenger
+                    setCurrentPassenger(null);
                     System.out.println("\t\t" + getType() + ": Finished " + passenger.getSeatingClass() + passenger.getPassengerNumber() + " at time " + time);
 
                 } else if(passenger.getStartProcessingTime() == 0) {
