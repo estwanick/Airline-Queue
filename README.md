@@ -1,22 +1,22 @@
 # Airline-Queue
 
-# CS652 Programming Assignment 1
+# CS610 Programming Assignment 1
 
 ### Configure Simulation Parameters:
 
 In Main.java you can configure the following properties of the simulation
 
-Dispatch passengerDispatch = new Dispatch(
-    int simulationDuration,
-    int avgCoachArrival,
-    int avgCoachService,
-    int avgFirstArrival,
-    int avgFirstService,
-    int absLateRange,
-    int avgServiceBuffer,
-    int fcPassengerCount,
-    int ccPassengerCount
-)
+Dispatch passengerDispatch = new Dispatch( <br />
+    int simulationDuration, <br />
+    int avgCoachArrival, <br />
+    int avgCoachService, <br />
+    int avgFirstArrival, <br />
+    int avgFirstService, <br />
+    int absLateRange, <br />
+    int avgServiceBuffer, <br />
+    int fcPassengerCount, <br />
+    int ccPassengerCount <br />
+) <br />
 
 ##### simulationDuration
 The time at which the service queues will stop accepting passengers
