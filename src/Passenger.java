@@ -5,11 +5,21 @@ public class Passenger implements Comparable{
     private int arrivalTime;
     private int startProcessingTime;
     private int processingDuration;
+    private boolean processed;
 
     public Passenger(int passengerNumber, String seatingClass, int arrivalTime) {
         this.passengerNumber = passengerNumber;
         this.seatingClass = seatingClass;
         this.arrivalTime = arrivalTime;
+        this.processed = false;
+    }
+
+    public boolean getProcess() {
+        return processed;
+    }
+
+    public void setProcessed(boolean processed) {
+        this.processed = processed;
     }
 
     public int getPassengerNumber() {

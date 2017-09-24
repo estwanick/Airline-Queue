@@ -48,8 +48,8 @@ public class Station {
             if(passenger.getArrivalTime() <= time) {
                 if(passenger.getStartProcessingTime() > 0 &&
                         time == passenger.getStartProcessingTime() + passenger.getProcessingDuration()) {
-                    //currentPassenger = null; //Ready to process new passenger
                     setCurrentPassenger(null);
+                    passenger.setProcessed(true);
                     System.out.println("\t\t" + getType() + ": Finished " + passenger.getSeatingClass() + passenger.getPassengerNumber() + " at time " + time);
 
                 } else if(passenger.getStartProcessingTime() == 0) {

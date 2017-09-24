@@ -3,14 +3,10 @@ import java.util.Iterator;
 public class Dispatch {
 
     int simulationDuration;
-    final int closeQueue = 40;
     int avgCoachArrival;
     int avgCoachService;
     int avgFirstArrival;
     int avgFirstService;
-
-    Queue fcArrivalQueue = new Queue<Queue>();
-    Queue ccArrivalQueue = new Queue<Queue>();
 
     Queue fcStationsLine = new Queue<Queue>();
     Queue ccStationsLine = new Queue<Queue>();
@@ -22,16 +18,18 @@ public class Dispatch {
     Station cc2 = new Station(CONSTANTS.COACHCLASS + "2");
     Station cc3 = new Station(CONSTANTS.COACHCLASS + "3");
 
-    PriorityQueue fcPassengers = new PriorityQueue<Passenger>(4);
-    PriorityQueue ccPassengers = new PriorityQueue<Passenger>(4);
+    PriorityQueue fcPassengers = new PriorityQueue<Passenger>(10);
+    PriorityQueue ccPassengers = new PriorityQueue<Passenger>(10);
+
+    Statistics stats = new Statistics();
 
 
     public Dispatch(int simulationDuration, int avgCoachArrival, int avgCoachService, int avgFirstArrival, int avgFirstService,
                     int absLateRange, int fcPassengerCount, int ccPassengerCount) {
         fcPassengers = passengerGenerator(fcPassengerCount, CONSTANTS.FIRSTCLASS, avgFirstArrival, absLateRange);
         ccPassengers = passengerGenerator(ccPassengerCount, CONSTANTS.COACHCLASS, avgCoachArrival, absLateRange);
-        printFcPassengers();
-        printCcPassengers();
+//        printFcPassengers();
+//        printCcPassengers();
 
 //
 //        fcPassengers.add(new Passenger(1, CONSTANTS.FIRSTCLASS, 5));
@@ -56,7 +54,8 @@ public class Dispatch {
         this.avgFirstArrival = avgFirstArrival;
         this.avgFirstService = avgFirstService;
         this.simulationDuration = simulationDuration;
-        //startSimulation();
+        startSimulation();
+        stats.outputStats();
     }
 
     public void placeInQueue(Passenger passenger, int time) {
@@ -82,16 +81,10 @@ public class Dispatch {
     }
 
     public void startSimulation() {
-        //startBoarding();
         int timer = 0;
-        Passenger fp;
-        Passenger cp;
-        Passenger fpPeek;
-        Passenger cpPeek;
         Passenger fpMin;
         Passenger cpMin;
-        Boolean passengerFound;
-        while(timer <= simulationDuration) {
+        while(ccPassengers.getSize() > 0 || fcPassengers.getSize() > 0 || stationsBusy()) {
             System.out.println("Time: " + timer + " ");
 
             while(fcPassengers.peek() != null && ((Passenger) fcPassengers.peek()).getArrivalTime() == timer) {
@@ -106,16 +99,25 @@ public class Dispatch {
 
             fc1.processPassengers(fcStationsLine, timer);
             fc2.processPassengers(fcStationsLine, timer);
-            //check if cc1, cc2, cc3 are busy if so check if fc1, fc2 are busy
-            //if all coach stations are busy process coach at fc
-            //if all fc are busy place passenger at coach station 
             cc1.processPassengers(ccStationsLine, timer);
             cc2.processPassengers(ccStationsLine, timer);
             cc3.processPassengers(ccStationsLine, timer);
 
+            if(timer == simulationDuration) {
+                System.out.println("**Passengers after this will miss their flight");
+            }
 
             timer++;
+        }
 
+        stats.setTotalDuration(timer);
+    }
+
+    private boolean stationsBusy() {
+        if(cc1.isBusy() || cc2.isBusy() || cc3.isBusy() || fc1.isBusy() || fc2.isBusy()) {
+            return true;
+        } else {
+            return false;
         }
     }
 
