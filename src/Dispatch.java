@@ -4,10 +4,10 @@ public class Dispatch {
 
     int simulationDuration;
     final int closeQueue = 40;
-    double avgCoachArrival;
-    double avgCoachService;
-    double avgFirstArrival;
-    double avgFirstService;
+    int avgCoachArrival;
+    int avgCoachService;
+    int avgFirstArrival;
+    int avgFirstService;
 
     Queue fcArrivalQueue = new Queue<Queue>();
     Queue ccArrivalQueue = new Queue<Queue>();
@@ -26,33 +26,37 @@ public class Dispatch {
     PriorityQueue ccPassengers = new PriorityQueue<Passenger>(4);
 
 
-    public Dispatch(int simulationDuration, double avgCoachArrival, double avgCoachService, double avgFirstArrival, double avgFirstService) {
-        //fcPassengers = passengerGenerator(10, CONSTANTS.FIRSTCLASS);
-        //ccPassengers = passengerGenerator(10, CONSTANTS.COACHCLASS);
+    public Dispatch(int simulationDuration, int avgCoachArrival, int avgCoachService, int avgFirstArrival, int avgFirstService,
+                    int absLateRange, int fcPassengerCount, int ccPassengerCount) {
+        fcPassengers = passengerGenerator(fcPassengerCount, CONSTANTS.FIRSTCLASS, avgFirstArrival, absLateRange);
+        ccPassengers = passengerGenerator(ccPassengerCount, CONSTANTS.COACHCLASS, avgCoachArrival, absLateRange);
+        printFcPassengers();
+        printCcPassengers();
 
-        fcPassengers.add(new Passenger(1, CONSTANTS.FIRSTCLASS, 5));
-        fcPassengers.add(new Passenger(2, CONSTANTS.FIRSTCLASS, 5));
-        fcPassengers.add(new Passenger(3, CONSTANTS.FIRSTCLASS, 6));
-        fcPassengers.add(new Passenger(4, CONSTANTS.FIRSTCLASS, 7));
-        fcPassengers.add(new Passenger(5, CONSTANTS.FIRSTCLASS, 7));
-        fcPassengers.add(new Passenger(6, CONSTANTS.FIRSTCLASS, 7));
-        fcPassengers.add(new Passenger(7, CONSTANTS.FIRSTCLASS, 10));
-        fcPassengers.add(new Passenger(8, CONSTANTS.FIRSTCLASS, 12));
-        ccPassengers.add(new Passenger(11, CONSTANTS.COACHCLASS, 5));
-        ccPassengers.add(new Passenger(11, CONSTANTS.COACHCLASS, 5));
-        ccPassengers.add(new Passenger(13, CONSTANTS.COACHCLASS, 5));
-        ccPassengers.add(new Passenger(14, CONSTANTS.COACHCLASS, 15));
-        ccPassengers.add(new Passenger(15, CONSTANTS.COACHCLASS, 6));
-        ccPassengers.add(new Passenger(16, CONSTANTS.COACHCLASS, 7));
-        ccPassengers.add(new Passenger(17, CONSTANTS.COACHCLASS, 17));
-        ccPassengers.add(new Passenger(18, CONSTANTS.COACHCLASS, 7));
+//
+//        fcPassengers.add(new Passenger(1, CONSTANTS.FIRSTCLASS, 5));
+//        fcPassengers.add(new Passenger(2, CONSTANTS.FIRSTCLASS, 5));
+//        fcPassengers.add(new Passenger(3, CONSTANTS.FIRSTCLASS, 6));
+//        fcPassengers.add(new Passenger(4, CONSTANTS.FIRSTCLASS, 7));
+//        fcPassengers.add(new Passenger(5, CONSTANTS.FIRSTCLASS, 7));
+//        fcPassengers.add(new Passenger(6, CONSTANTS.FIRSTCLASS, 7));
+//        fcPassengers.add(new Passenger(7, CONSTANTS.FIRSTCLASS, 10));
+//        fcPassengers.add(new Passenger(8, CONSTANTS.FIRSTCLASS, 12));
+//        ccPassengers.add(new Passenger(11, CONSTANTS.COACHCLASS, 5));
+//        ccPassengers.add(new Passenger(11, CONSTANTS.COACHCLASS, 5));
+//        ccPassengers.add(new Passenger(13, CONSTANTS.COACHCLASS, 5));
+//        ccPassengers.add(new Passenger(14, CONSTANTS.COACHCLASS, 15));
+//        ccPassengers.add(new Passenger(15, CONSTANTS.COACHCLASS, 6));
+//        ccPassengers.add(new Passenger(16, CONSTANTS.COACHCLASS, 7));
+//        ccPassengers.add(new Passenger(17, CONSTANTS.COACHCLASS, 17));
+//        ccPassengers.add(new Passenger(18, CONSTANTS.COACHCLASS, 7));
 
         this.avgCoachArrival = avgCoachArrival;
         this.avgCoachService = avgCoachService;
         this.avgFirstArrival = avgFirstArrival;
         this.avgFirstService = avgFirstService;
         this.simulationDuration = simulationDuration;
-        startSimulation();
+        //startSimulation();
     }
 
     public void placeInQueue(Passenger passenger, int time) {
@@ -171,12 +175,17 @@ public class Dispatch {
         }
     }
 
-    private PriorityQueue passengerGenerator(int passengerCount, String passengerClass) {
-        PriorityQueue pq = new PriorityQueue(10);
-        for(int i=0; i < passengerCount; i++) {
-            pq.add(new Passenger(i, passengerClass, (int)(Math.random()*closeQueue) ));
+    private PriorityQueue passengerGenerator(int passengerCount, String passengerClass, int avgFirstArrival, int randomBuffer) {
+        PriorityQueue pq = new PriorityQueue(passengerCount);
+        for(int i=1; i <= passengerCount; i++) {
+            int randomArrival = avgFirstArrival * i + randomInRange(-randomBuffer, randomBuffer);
+            pq.add(new Passenger(i, passengerClass, randomArrival));
         }
         return pq;
+    }
+
+    private int randomInRange(int min, int max) {
+        return min + (int)(Math.random() * ((max - min) + 1));
     }
 
 }
